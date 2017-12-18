@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="HttpClient.cpp" />
     <ClCompile Include="HttpHeader.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HttpClient.h" />
