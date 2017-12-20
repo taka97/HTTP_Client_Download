@@ -29,7 +29,6 @@ private:
 	string m_httptype;
 	string m_request;
 	string m_response;
-	bool is;
 
 	SOCKET sClient;
 	hostent *host;
