@@ -1,4 +1,4 @@
-#ifndef HTTP_CLIENT_H
+﻿#ifndef HTTP_CLIENT_H
 #define HTTP_CLIENT_H
 
 #include <string>
@@ -10,22 +10,17 @@ using namespace std;
 class HttpClient
 {
 private:
-	string hostName;
-	string url;
-	string httptype;
-	string request;
-	string response;
-	WSADATA wsaData;
-	SOCKET sClient;
-	hostent* host;
-	sockaddr_in servAdd;
-	char* recvBuffer;
+	string m_url;			// URL
+	string m_httptype;		// HTTP-TYPE
+	string m_hostName;		// tên máy chủ
+	string m_pathserver;	// đường dẫn đến server
 protected:
-	void createFolder(std::vector<vector<string>> dsFolder);
-
+	void createFolder(vector<vector<string>> dsFolder);
+	void downloadFile(string preName);
+	void downloadFolder(string preName);
 public:
 	HttpClient(string url, string httptype);
-	void download();
-	void download(string folderName);
+	~HttpClient();
+	void download(string preName);
 };
 #endif

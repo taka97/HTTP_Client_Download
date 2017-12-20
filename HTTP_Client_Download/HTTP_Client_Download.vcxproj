@@ -115,13 +115,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileClient.cpp" />
     <ClCompile Include="HttpClient.cpp" />
-    <ClCompile Include="HttpHeader.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileClient.h" />
     <ClInclude Include="HttpClient.h" />
-    <ClInclude Include="HttpHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
