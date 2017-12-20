@@ -10,22 +10,18 @@ using namespace std;
 class HttpClient
 {
 private:
-	string hostName;
-	string url;
-	string httptype;
-	string request;
-	string response;
-	WSADATA wsaData;
-	SOCKET sClient;
-	hostent* host;
-	sockaddr_in servAdd;
-	char* recvBuffer;
+	string m_url;
+	string m_httptype;
+	string m_hostName;
+	string m_pathserver;
 protected:
-	void createFolder(std::vector<vector<string>> dsFolder);
-
+	void createFolder(vector<vector<string>> dsFolder);
+	void downloadFile(string preName);
+	void downloadFolder(string preName);
+	size_t numPoint(string str);
 public:
 	HttpClient(string url, string httptype);
-	void download();
-	void download(string folderName);
+	~HttpClient();
+	void download(string preName);
 };
 #endif
