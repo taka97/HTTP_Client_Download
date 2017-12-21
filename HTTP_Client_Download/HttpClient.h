@@ -15,7 +15,7 @@ private:
 	string m_hostName;
 	string m_pathserver;
 protected:
-	void createFolder(vector<vector<string>> dsFolder);
+	void createFolder(string path, vector<string> dsFolder);
 	void downloadFile(string preName);
 	void downloadFolder(string preName);
 	size_t numPoint(string str);

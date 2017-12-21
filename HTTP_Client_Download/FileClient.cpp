@@ -85,10 +85,11 @@ int FileClient::download()
 	int iRecv;
 	recvBuffer = new char[BUFFER_LEN];
 	ZeroMemory(recvBuffer, BUFFER_LEN);
-	string header;
 	size_t offset;
 
-	int iResponseLength = 0;
+	size_t iResponseLength = 0;
+
+	cout << "Downloading file: " << m_filename << endl;
 
 	// header
 	do
@@ -96,24 +97,25 @@ int FileClient::download()
 		iRecv = recv(sClient, recvBuffer, BUFFER_LEN, 0);
 		if (iRecv > 0)
 		{
+			string header;
 			m_response.append(recvBuffer, iRecv);
 
 			if ((offset = m_response.find("\r\n\r\n")) != string::npos)
 			{
 				header = m_response.substr(0, offset);
-				cout << "Header: " << endl;
-				cout << header;
 				if (m_response.length() > offset + 4)
 				{
 					outFile.write(m_response.substr(offset + 4).c_str(), m_response.length() - offset - 4);
 				}
-
+				m_response = m_response.substr(0, offset);
 				iResponseLength += iRecv;
+				cout << "Downloaded: " << iResponseLength << " bytes\r";
 				ZeroMemory(recvBuffer, BUFFER_LEN);
 				break;
 			}
 
 			iResponseLength += iRecv;
+			cout << "Downloaded: " << iResponseLength << " bytes\r";
 			ZeroMemory(recvBuffer, BUFFER_LEN);
 		}
 	} while (iRecv > 0);
@@ -124,19 +126,19 @@ int FileClient::download()
 		iRecv = recv(sClient, recvBuffer, BUFFER_LEN, 0);
 		if (iRecv > 0)
 		{
-			m_response.append(recvBuffer, iRecv);
 			outFile.write(recvBuffer, iRecv);
 			iResponseLength += iRecv;
+			cout << "Downloaded: " << iResponseLength << " bytes\r";
 			ZeroMemory(recvBuffer, BUFFER_LEN);
 		}
 		else if (iRecv == 0)
-			cout << endl << endl << "Download success" << endl;
+			cout << endl << "Download completed" << endl;
 		else if (iRecv == SOCKET_ERROR)
 			cout << "revc() is failed" << endl;
 	} while (iRecv > 0);
 
 	outFile.close();
-	renderFile(header);
+	renderFile(m_response);
 
 	closesocket(sClient);
 }
@@ -152,8 +154,8 @@ void FileClient::renderFile(string header)
 		int chunkedLength = 0;
 		int readingLength;
 
-		while(!inFile.eof())
-		//while (fileSize != inFile.tellg())
+		while (!inFile.eof())
+			//while (fileSize != inFile.tellg())
 		{
 			inFile >> hex >> chunkedLength;
 			inFile.ignore(2);

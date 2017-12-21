@@ -17,7 +17,8 @@ HttpClient::~HttpClient()
 
 void HttpClient::downloadFile(string preName)
 {
-
+	FileClient client(m_url, m_httptype, preName);
+	client.download();
 }
 
 void HttpClient::downloadFolder(string preName)
@@ -44,17 +45,13 @@ void HttpClient::download(string preName)
 		// URL is for download file
 		if (m_url[m_url.length() - 1] == '/')
 		{
-			cout << "Download folder" << endl;
+			cout << "Downloading folder" << endl;
 		}
 		else
-		{
-			cout << "Download file" << endl;
-			FileClient client(m_url, m_httptype, preName);
-			client.download();
-		}
+			downloadFile(preName);
 	}
 }
 
-void HttpClient::createFolder(vector<vector<string>> dsFolder)
+void HttpClient::createFolder(string path, vector<string> dsFolder)
 {
 }
