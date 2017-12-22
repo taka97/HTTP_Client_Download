@@ -25,12 +25,13 @@ private:
 protected:
 	bool isFile(string url);
 	string folderName(string url);
+
 	void extractLinkFromFile(string fileName, string url, vector<string> &fileURL, vector<string> &folderURL);
 	void extractLinkFromFile(string fileName, string url, vector<string>& fileURL);
 	bool createFolder(string folderName, string path = "");
 	bool createFolder(vector<string> dsFolder, string path = "");
 	void downloadFile(string preName);
-	void downloadFolder(string preName, bool DownloadSubFolder = true);
+	void downloadFolder(string url, string preName, bool DownloadSubFolder = true);
 public:
 	HttpClient(string url, string httptype);
 	~HttpClient();

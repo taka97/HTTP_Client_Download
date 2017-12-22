@@ -2,13 +2,12 @@
 
 FileClient::FileClient(string url, string httptype, string filename, string pathSave, bool isShow)
 {
-	m_url = url;	FindAndReplace(m_url, " ", "%20");
-
+	m_url = url.find("http://") != -1 ? url.substr(7) : url;		FindAndReplace(m_url, " ", "%20");
 	m_httptype = httptype;
 	m_hostname = m_url.substr(0, url.find('/'));
 	m_pathServer = m_url.substr(url.find('/'));
 	m_pathSave = pathSave;
-	m_filename = filename == "" ? url.substr(url.find_last_of('/') + 1) : filename;
+	m_filename = filename == "" ? url.substr(url.find_last_of('/') + 1) : filename;		FindAndReplace(m_filename, "%20", " ");
 	m_tempFile = "download.tmp";
 	m_isShow = isShow;
 
@@ -25,7 +24,7 @@ FileClient::FileClient(string url, string httptype, string filename, string path
 
 FileClient::FileClient(string url, string httptype, string preName)
 {
-	m_url = url;	FindAndReplace(m_url, " ", "%20");
+	m_url = url.find("http://") != -1 ? url.substr(7) : url;	FindAndReplace(m_url, " ", "%20");
 	m_httptype = httptype;
 	m_hostname = m_url.substr(0, url.find('/'));
 	m_pathServer = m_url.substr(url.find('/'));
@@ -83,7 +82,7 @@ int FileClient::download()
 	m_request += "\r\nConnection: close";
 	m_request += "\r\n\r\n";
 
-	int sendret = send(sClient, m_request.c_str(), m_request.length(), 0);
+	int sendret = send(sClient, m_request.c_str(), (int)m_request.length(), 0);
 	if (sendret == -1)
 	{
 		cout << "send() failed" << endl;
@@ -107,7 +106,7 @@ int FileClient::download()
 	size_t iResponseLength = 0;
 
 	if (m_isShow)
-		cout << "-----------------------" << endl << "Downloading file: " << m_filename << endl;
+		cout << "Downloading file: " << m_filename << endl;
 
 	// header
 	do
@@ -155,7 +154,7 @@ int FileClient::download()
 		else if (iRecv == 0)
 		{
 			if (m_isShow)
-				cout << endl << "Download completed" << endl << "-----------------------" << endl << endl;
+				cout << "\rDownloaded: " << iResponseLength << " bytes\t\tDownload completed" << endl << endl;
 		}
 		else if (iRecv == SOCKET_ERROR)
 		{
@@ -227,11 +226,12 @@ size_t FileClient::FindAndReplace(string &strContent, string findCh, string repl
 	size_t offset;
 	size_t count = 0;
 	size_t length = strContent.length();
+	size_t lenCh = findCh.length();
 	do
 	{
 		offset = strContent.find(findCh);
 		if (offset != string::npos)
-			strContent.replace(offset, 1, replaceCh);
+			strContent.replace(offset, lenCh, replaceCh);
 	} while (offset != string::npos);
 
 	return count;

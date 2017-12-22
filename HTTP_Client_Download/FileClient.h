@@ -1,5 +1,6 @@
 #ifndef FILE_CLIENT_H
 #define FILE_CLIENT_H
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <iostream>
 #include <string>

@@ -12,7 +12,7 @@
 HttpClient::HttpClient(string url, string httptype)
 {
 	if (url.find("http://") != -1)
-		m_url = url.substr(7, url.length() - 7);
+		m_url = url.substr(7);
 	else
 		m_url = url;
 	m_httptype = httptype;
@@ -227,38 +227,53 @@ void HttpClient::downloadFile(string preName)
 	client.download();
 }
 
-void HttpClient::downloadFolder(string preName, bool DownloadSubFolder)
+void HttpClient::downloadFolder(string url, string preName, bool DownloadSubFolder)
 {
-	string pathSave = preName + folderName(m_url);
+	string pathSave = preName + folderName(url);
 	createFolder(pathSave);		// create folder <MSSV>_folderName
 
-	FileClient tempFile(m_url, m_httptype, "tmp", "", false);
+	FileClient tempFile(url, m_httptype, "tmp", "", false);
 	tempFile.download();		// download html file to extract link
-
-	vector<string> fileURL, folderURL;
-	extractLinkFromFile("tmp", m_url, fileURL, folderURL);	// extract link from html file
 
 	size_t size;
 	pathSave.append("/");
 
-	size = folderURL.size();
-	if (size != 0)
+	if (DownloadSubFolder)
 	{
-		for (size_t i = 0; i < size; i++)
-			createFolder(folderName(folderURL[i]), pathSave);
-	}
+		vector<string> fileURL;
+		vector<string> folderURL;
+		extractLinkFromFile("tmp", url, fileURL, folderURL);	// extract link from html file
 
-	size = fileURL.size();
-	if (size != 0)
-	{
-		for (size_t i = 0; i < size; i++)
+		size = folderURL.size();
+		if (size != 0)
 		{
-			cout << "Downloaded " << i << "/" << size << endl;
-			FileClient(fileURL[i], m_httptype, "", pathSave).download();
+			//// create sub-folder
+			//for (size_t i = 0; i < size; i++)
+			//	createFolder(folderName(folderURL[i]), pathSave);
+			cout << "--------------------------------\n" << "Downloading files in folder " << pathSave << "\n--------------------------------" << endl;
+			for (size_t i = 0; i < size; i++)
+				downloadFolder(folderURL[i], pathSave, false);
 		}
-		cout << "Download all files" << endl;
-	}
 
+		size = fileURL.size();
+		if (size != 0)
+		{
+			for (size_t i = 0; i < size; i++)
+				FileClient(fileURL[i], m_httptype, "", pathSave).download();
+		}
+	}
+	else
+	{
+		vector<string> fileURL;
+		extractLinkFromFile("tmp", url, fileURL);	// extract link from html file
+
+		size = fileURL.size();
+		if (size != 0)
+		{
+			for (size_t i = 0; i < size; i++)
+				FileClient(fileURL[i], m_httptype, "", pathSave).download();
+		}
+	}
 	remove("tmp");
 }
 
@@ -266,7 +281,13 @@ void HttpClient::download(string preName)
 {
 	// check if URL is file?
 	if (isFile(m_url))
+	{
 		downloadFile(preName);
+		cout << endl << endl << "All files is downloaded completely" << endl << endl;
+	}
 	else if (m_url[m_url.length() - 1] == '/')
-		downloadFolder(preName);
+	{
+		downloadFolder(m_url, preName);
+		cout << endl << endl << "All files and folders are downloaded completely" << endl << endl;
+	}
 }

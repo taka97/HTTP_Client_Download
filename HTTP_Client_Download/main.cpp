@@ -47,7 +47,6 @@ int main(int argc, char** argv)
 	HttpClient client(url, httptype);
 	client.download(preName);
 
-	system("pause");
 	return 0;
 }
 
