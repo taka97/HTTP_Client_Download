@@ -1,21 +1,37 @@
 #include "FileClient.h"
 
-FileClient::FileClient(string url, string httptype, string preName, string pathSave)
+FileClient::FileClient(string url, string httptype, string filename, string pathSave, bool isShow)
 {
-	m_url = url;
-	FindAndReplace(m_url, " ", "%20");
+	m_url = url;	FindAndReplace(m_url, " ", "%20");
 	m_httptype = httptype;
 	m_hostname = m_url.substr(0, url.find('/'));
 	m_pathServer = m_url.substr(url.find('/'));
 	m_pathSave = pathSave;
-	m_filename = preName + url.substr(url.find_last_of('/') + 1);
+	m_filename = filename == "" ? url.substr(url.find_last_of('/') + 1) : filename;
 	m_tempFile = "download.tmp";
+	m_isShow = isShow;
 
-	if (m_pathSave != ".")
+	if (m_pathSave != "")
 	{
 		m_filename = m_pathSave + m_filename;
 		m_tempFile = m_pathSave + m_tempFile;
 	}
+
+	sClient = INVALID_SOCKET;
+	host = NULL;
+	recvBuffer = NULL;
+}
+
+FileClient::FileClient(string url, string httptype, string preName)
+{
+	m_url = url;	FindAndReplace(m_url, " ", "%20");
+	m_httptype = httptype;
+	m_hostname = m_url.substr(0, url.find('/'));
+	m_pathServer = m_url.substr(url.find('/'));
+	m_pathSave = "";
+	m_filename = preName + url.substr(url.find_last_of('/') + 1);
+	m_tempFile = "download.tmp";
+	m_isShow = true;
 
 	sClient = INVALID_SOCKET;
 	host = NULL;
@@ -89,7 +105,8 @@ int FileClient::download()
 
 	size_t iResponseLength = 0;
 
-	cout << "Downloading file: " << m_filename << endl;
+	if (m_isShow)
+		cout << "-----------------------" << endl << "Downloading file: " << m_filename << endl;
 
 	// header
 	do
@@ -109,13 +126,15 @@ int FileClient::download()
 				}
 				m_response = m_response.substr(0, offset);
 				iResponseLength += iRecv;
-				cout << "Downloaded: " << iResponseLength << " bytes\r";
+				if (m_isShow)
+					cout << "Downloaded: " << iResponseLength << " bytes\r";
 				ZeroMemory(recvBuffer, BUFFER_LEN);
 				break;
 			}
 
 			iResponseLength += iRecv;
-			cout << "Downloaded: " << iResponseLength << " bytes\r";
+			if (m_isShow)
+				cout << "Downloaded: " << iResponseLength << " bytes\r";
 			ZeroMemory(recvBuffer, BUFFER_LEN);
 		}
 	} while (iRecv > 0);
@@ -128,19 +147,29 @@ int FileClient::download()
 		{
 			outFile.write(recvBuffer, iRecv);
 			iResponseLength += iRecv;
-			cout << "Downloaded: " << iResponseLength << " bytes\r";
+			if (m_isShow)
+				cout << "\rDownloaded: " << iResponseLength << " bytes";
 			ZeroMemory(recvBuffer, BUFFER_LEN);
 		}
 		else if (iRecv == 0)
-			cout << endl << "Download completed" << endl;
+		{
+			if (m_isShow)
+				cout << endl << "Download completed" << endl << "-----------------------" << endl << endl;
+		}
 		else if (iRecv == SOCKET_ERROR)
+		{
 			cout << "revc() is failed" << endl;
+			outFile.close();
+			closesocket(sClient);
+			return -1;
+		}
 	} while (iRecv > 0);
 
 	outFile.close();
 	renderFile(m_response);
 
 	closesocket(sClient);
+	return 0;
 }
 
 void FileClient::renderFile(string header)

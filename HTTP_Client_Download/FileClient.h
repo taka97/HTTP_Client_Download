@@ -11,7 +11,8 @@ using namespace std;
 class FileClient
 {
 public:
-	FileClient(string url, string httptype, string preName = "", string pathSave = ".");
+	FileClient(string url, string httptype, string filename, string pathSave, bool isShow = true);
+	FileClient(string url, string httptype, string preName = "");
 	~FileClient();
 	int download();
 
@@ -29,6 +30,7 @@ private:
 	string m_httptype;
 	string m_request;
 	string m_response;
+	bool m_isShow;
 
 	SOCKET sClient;
 	hostent *host;
