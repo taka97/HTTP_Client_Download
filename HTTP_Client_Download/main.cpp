@@ -11,14 +11,14 @@ void proccess(char *argv1, char *argv2, string &url, string &httptype);
 int main(int argc, char** argv)
 {
 	string url, httptype;
-	string preName = "1512174_";
+	string preName = "1512174_1512174_1512177_1512675_";
 
 	// kiểm tra tham số đầu vào
 	if (argc != 3)
 	{
 		cout << "Usage: <MSSV> <URL> --<HTTP_Type>" << endl;
 		cout << "    or <MSSV> --<HTTP_Type> <URL>" << endl;
-		cout << "Example: 1512174 http://www.ietf.org/rfc/rfc2183.txt --http1.0" << endl;
+		cout << "Example: 1512174_1512177_1512675.exe http://www.ietf.org/rfc/rfc2183.txt --http1.0" << endl;
 		return -1;
 	}
 	// xử lý tham số đầu vào
