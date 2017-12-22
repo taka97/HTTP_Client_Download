@@ -3,6 +3,7 @@
 FileClient::FileClient(string url, string httptype, string filename, string pathSave, bool isShow)
 {
 	m_url = url;	FindAndReplace(m_url, " ", "%20");
+
 	m_httptype = httptype;
 	m_hostname = m_url.substr(0, url.find('/'));
 	m_pathServer = m_url.substr(url.find('/'));

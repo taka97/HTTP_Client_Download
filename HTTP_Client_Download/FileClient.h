@@ -15,7 +15,6 @@ public:
 	FileClient(string url, string httptype, string preName = "");
 	~FileClient();
 	int download();
-
 protected:
 	void renderFile(string header);
 	size_t FindAndReplace(string &strContent, string findCh, string replaceCh);

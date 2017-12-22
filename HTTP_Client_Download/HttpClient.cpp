@@ -3,6 +3,12 @@
 #include <iomanip>
 #include <algorithm>
 
+// khởi tạo với tham số cho trước
+// dữ liệu cần khởi tạo
+// m_url = ?
+// m_httptype = ?
+// m_hostName = ?
+// m_pathserver = ?
 HttpClient::HttpClient(string url, string httptype)
 {
 	if (url.find("http://") != -1)
