@@ -1,4 +1,4 @@
-﻿#ifndef FILE_CLIENT_H
+#ifndef FILE_CLIENT_H
 #define FILE_CLIENT_H
 
 #include <iostream>
@@ -11,27 +11,29 @@ using namespace std;
 class FileClient
 {
 public:
-	FileClient(string url, string httptype, string preName = "", string pathSave = ".");
+	FileClient(string url, string httptype, string filename, string pathSave, bool isShow = true);
+	FileClient(string url, string httptype, string preName = "");
 	~FileClient();
 	int download();
 protected:
 	void renderFile(string header);
 	size_t FindAndReplace(string &strContent, string findCh, string replaceCh);
 private:
-	string m_url;			// URL
-	string m_hostname;		// tên của máy chủ
-	string m_pathServer;	// đường dẫn chứa tài nguyên trên hệ thống
-	string m_pathSave;		// đường dẫn lưu file. Nếu lưu ở thư mục cùng cấp thì là dấu "."
-	string m_filename;		// tên file chính thức
-	string m_tempFile;		// tên file chứa dữ liệu tạm thời
+	string m_url;
+	string m_hostname;
+	string m_pathServer;
+	string m_pathSave;
+	string m_filename;
+	string m_tempFile;
 
 	string m_httptype;
-	string m_request;		// thông điệp gửi tới server
-	string m_response;		// thông điệp từ server gửi về
+	string m_request;
+	string m_response;
+	bool m_isShow;
 
-	SOCKET sClient;			// Socket để kết nối đến server
-	hostent *host;			// chứa địa chỉ IP của server
-	sockaddr_in servAdd;	// chứa thông tin kết nối tới server
-	char *recvBuffer;		// bộ nhớ đệm để chứa dữ liệu từ về từ server
+	SOCKET sClient;
+	hostent *host;
+	sockaddr_in servAdd;
+	char *recvBuffer;
 };
 #endif
