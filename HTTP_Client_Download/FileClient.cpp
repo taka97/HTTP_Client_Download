@@ -29,7 +29,7 @@ FileClient::FileClient(string url, string httptype, string preName)
 	m_hostname = m_url.substr(0, url.find('/'));
 	m_pathServer = m_url.substr(url.find('/'));
 	m_pathSave = "";
-	m_filename = preName + url.substr(url.find_last_of('/') + 1);
+	m_filename = preName + url.substr(url.find_last_of('/') + 1);	FindAndReplace(m_filename, "%20", " ");
 	m_tempFile = "download.tmp";
 	m_isShow = true;
 
