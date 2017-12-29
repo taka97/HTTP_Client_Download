@@ -26,18 +26,9 @@ HttpClient::~HttpClient()
 bool HttpClient::isFile(string url)
 {
 	size_t num = ext.size();
-	if (url.length() < 5)
+	if (url.length() < 5 || url.back() == '/')
 		return false;
-	size_t posStart, len;
-	for (size_t i = 0; i < num; i++)
-	{
-		posStart = url.length() - ext[i].length();
-		len = ext[i].length();
-		if (url.compare(posStart, len, ext[i]) == 0)
-			return true;
-	}
-
-	return false;
+	return url.substr(url.length() - 5).find(".") != string::npos ? true : false;
 }
 
 string HttpClient::folderName(string url)
