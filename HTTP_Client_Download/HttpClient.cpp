@@ -274,7 +274,7 @@ void HttpClient::download(string preName)
 	if (isFile(m_url))
 	{
 		downloadFile(preName);
-		cout << endl << endl << "All files is downloaded completely" << endl << endl;
+		cout << endl << endl << "Files is downloaded completely" << endl << endl;
 	}
 	else if (m_url[m_url.length() - 1] == '/')
 	{
